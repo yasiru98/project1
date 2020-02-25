@@ -18,6 +18,7 @@ const respondJSONMeta = (request, response, status) => {
 
   response.writeHead(status, headers);
   response.end();
+
 };
 
 const getUsers = (request, response) => {
