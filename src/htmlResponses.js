@@ -4,8 +4,8 @@ const index = fs.readFileSync(`${__dirname}/../client/client.html`);
 const css = fs.readFileSync(`${__dirname}/../client/style.css`);
 const sviper = fs.readFileSync(`${__dirname}/../sviper/game.html`);
 const sviperMain = fs.readFileSync(`${__dirname}/../sviper/js/main.js`);
-const sviperLoader = fs.readFileSync(`${__dirname}/../sviper/js/utilities.js`);
-const sviperUtilities= fs.readFileSync(`${__dirname}/../sviper/js/loader.js`);
+const sviperLoader = fs.readFileSync(`${__dirname}/../sviper/js/loader.js`);
+const sviperUtilities= fs.readFileSync(`${__dirname}/../sviper/js/utilities.js`);
 const sviperClasses = fs.readFileSync(`${__dirname}/../sviper/js/classes.js`);
 
 
