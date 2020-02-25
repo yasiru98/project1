@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Sviper</title>
+	<style>
+	body{
+		cursor: url(/move.png) 8 8,crosshair;
+	}
+	</style>
+	<script>
+	  const handleResponse = (xhr, parseResponse) => {
+      const content = document.querySelector('#content');
+
+      let message = xhr.response? JSON.parse(xhr.response).message || (xhr.response) : "";
+ 
+      
+      switch (xhr.status) {
+        case 200:
+          content.innerHTML = `<b>Success</b><p>Message: ${message}</p>`;
+          break;
+        case 201:
+          content.innerHTML = `<b>Created</b><p>Message: ${message}</p>`;
+          break;
+        case 204:
+          content.innerHTML = `<b>Updated (No Content)</b><p>Message: ${message}</p>`;
+        break;
+        case 404:
+          content.innerHTML = `<b>Resource Not Found</b><p>Message: ${message}</p>`;
+          break;
+        case 400:
+          content.innerHTML = `<b>Bad Request</b><p>Message: ${message}</p>`;
+          break;
+        default:
+          content.innerHTML = `<b>Error Code Not Implemented By Client</b><p>Status Code: ${xhr.status}</p>`;
+          break;
+        }
+    };
+
+    const sendPost = (e, nameForm) => {
+      const nameAction = nameForm.getAttribute('action');
+      const nameMethod = nameForm.getAttribute('method');
+      
+      const nameField = nameForm.querySelector('#nameField');
+      const ageField = nameForm.querySelector('#ageField');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(nameMethod, nameAction);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.setRequestHeader('Accept', 'application/json');
+
+      xhr.onload = () =>{
+        handleResponse(xhr);
+      }
+      
+	  const formData  = `name=${nameField.value}&age=${ageField.value}&score=${globalVariable.score}`;
+
+      xhr.send(formData);
+    
+      e.preventDefault();
+      return false;
+    };
+
+    const sendGet = (e, userForm) => {
+      let userAction = "/getUsers";
+      let userMethod = "get";
+      
+      
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(userMethod, userAction);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.setRequestHeader('Accept', 'application/json');
+
+      xhr.onload = () =>{
+        handleResponse(xhr);
+      }
+      
+      xhr.send();
+    
+      e.preventDefault();
+      return false;
+    }
+
+    const init = () => {
+      const nameForm = document.querySelector('#nameForm');
+      const addUser = (e) => sendPost(e, nameForm);
+      nameForm.addEventListener('submit', addUser);
+
+      
+      const userForm = document.querySelector('#userForm');
+      const getFunct = (e) => sendGet(e, userForm);
+	  userForm.addEventListener('submit', getFunct);
+	  
+
+		
+
+    };
+
+    window.onload = init;
+	</script>
+</head>
+<body>
+<!-- External libraries -->
+<!-- https://github.com/pixijs/pixi.js?utm_source=html5weekly -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.6.0/pixi.min.js"></script>
+<!--  https://github.com/goldfire/howler.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.5/howler.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+<!-- My JS files -->
+<script src="/loader.js"></script>
+<script src="/utilities.js"></script>
+<script src="/classes.js"></script>
+<script src="/main.js"></script>
+
+
+<section id="top">
+		<form id="nameForm" action="/addUser" method="post">
+		  <label for="name">Name: </label>
+		  <input id="nameField" type="text" name="name" />
+		  <label for="age">Age: </label>
+		  <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
+		  <input type="submit" value="Submit High Score" />
+		</form>
+		<form id="userForm" action="/getUsers" method="get">
+		  <input type="submit" value="Get High Scores" />
+		</form>
+</section>
+
+<section id="content">
+</section>
+
+</body>
+</html>
