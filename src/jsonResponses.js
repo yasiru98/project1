@@ -25,11 +25,11 @@ const respondJSONMeta = (request, response, status) => {
 const getUsers = (request, response) => {
   let responseJSON ;
   const game = request.headers.accept.split(',');
-  console.log(game[1]=="sviper");
-  if(game[1]=="sviper"){
+  console.log(game[1]==="sviper");
+  if(game[1]==="sviper"){
     responseJSON = sviperUsers;
   }
-  else if(game[1]=="flappybox"){
+  else if(game[1]==="flappybox"){
     responseJSON = flappyUsers;
   }
   else {
@@ -53,16 +53,16 @@ const addUser = (request, response, body) => {
     responseJSON.id = 'missingParams';
     return respondJSON(request, response, 400, responseJSON.message);
   }
-  else if (body.score == "null" || body.score == "0") {
+  else if (body.score === "null" || body.score === "0") {
     responseJSON.id = 'missingScore';
     return respondJSON(request, response, 400, responseJSON.playMessage);
   }
-  else if (body.age == 0) {
+  else if (body.age === 0) {
     responseJSON.id = 'missingScore';
     return respondJSON(request, response, 400, responseJSON.ageMessage);
   }
   let responseCode = 201; // created response code
-  if(body.game == "sviper"){
+  if(body.game === "sviper"){
     
     if (sviperUsers[body.name]) {
       responseCode = 204; // updated response code
@@ -78,7 +78,7 @@ const addUser = (request, response, body) => {
     sviperUsers[body.name].score = body.score;
     //console.log(sviperUsers);
   }
-  else if(body.game == "flappy"){
+  else if(body.game === "flappy"){
     if (flappyUsers[body.name]) {
       responseCode = 204; // updated response code
     } else {
