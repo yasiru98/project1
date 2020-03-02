@@ -3,7 +3,8 @@
 "use strict";
 const app = new PIXI.Application(800,600);
 app.renderer.backgroundColor = 0x0080FF;
-document.body.appendChild(app.view);
+let div = document.getElementById('canvas-container');
+div.appendChild(app.view);
 
 // constants
 const sceneWidth = app.view.width;
@@ -65,7 +66,7 @@ function setup() {
     gameScene.addChild(ship);
   
 	// #6 - Load Sounds
-	shootSound = new Howl({
+  	shootSound = new Howl({
         src: ['sounds/weapon_player.wav']
     });
     

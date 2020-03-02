@@ -2,17 +2,38 @@ const fs = require('fs');
 
 const index = fs.readFileSync(`${__dirname}/../client/client.html`);
 const css = fs.readFileSync(`${__dirname}/../client/style.css`);
+
 const sviper = fs.readFileSync(`${__dirname}/../sviper/game.html`);
 const sviperMain = fs.readFileSync(`${__dirname}/../sviper/js/main.js`);
 const sviperLoader = fs.readFileSync(`${__dirname}/../sviper/js/loader.js`);
 const sviperUtilities= fs.readFileSync(`${__dirname}/../sviper/js/utilities.js`);
 const sviperClasses = fs.readFileSync(`${__dirname}/../sviper/js/classes.js`);
 
-
+const flappy = fs.readFileSync(`${__dirname}/../flappybox/index.html`);
+const flappyMain = fs.readFileSync(`${__dirname}/../flappybox/flappyMain.js`);
+const flappyLibrary = fs.readFileSync(`${__dirname}/../flappybox/phaser.min.js`);
 
 const getIndex = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
   response.write(index);
+  response.end();
+};
+
+const getFlappy = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.write(flappy);
+  response.end();
+};
+
+const getFlappyMain = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'application/javascript' });
+  response.write(flappyMain);
+  response.end();
+};
+
+const getFlappyLibrary = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'application/javascript' });
+  response.write(flappyLibrary);
   response.end();
 };
 
@@ -21,6 +42,8 @@ const getSviper = (request, response) => {
   response.write(sviper);
   response.end();
 };
+
+
 
 const getSviperMain = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'application/javascript' });
@@ -64,5 +87,8 @@ module.exports = {
   getSviperLoader,
   getSviperClasses,
   getSviperUtilities,
+  getFlappy,
+  getFlappyMain,
+  getFlappyLibrary
 
 };

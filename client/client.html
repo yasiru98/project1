@@ -3,14 +3,228 @@
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
 <body>
   
 <section id="content">
-  
-<a href="/getSviper">Play Sviper</a>
+<div id="app">
+  <v-app>
+    <v-content>
+
+      <v-container>
+        <v-row>
+          <v-col   cols="6"
+          md="6">
+
+          <v-card
+      class="mx-auto"
+      max-width="344"
+    >
+      <v-card-text>
+        <div>Game</div>
+        <p class="display-1 text--primary">
+          Sviper
+        </p>
+        <p>PIXI.js</p>
+        <div class="text--primary">
+            Control the SVIPER jet, defeat enemies, collect power ups and rack up a high score.
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          text
+          color="deep-purple accent-4"
+          href="/getSviper"
+        >
+          Play
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+
+          </v-col>
+          <v-col   cols="6"
+          md="6">
+         
+          <v-card
+      class="mx-auto"
+      max-width="344"
+          >
+      <v-card-text>
+        <div>Game</div>
+        <p class="display-1 text--primary">
+          Flappy Box
+        </p>
+        <p>Phaser.js</p>
+        <div class="text--primary">
+            Flappy bird clone: Flappy Box.
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          text
+          color="deep-purple accent-4"
+          href="/getFlappy"
+        >
+          Play
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+
+
+      <p class="text-center headline my-12">Leader Boards</p>
+
+      <v-row >
+          <v-col
+            cols="6"
+            md="6"
+            sm="12"
+            xm="12"
+          >
+          <v-card>
+              <v-card-title>
+                Sviper
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
+              <v-data-table
+                :headers="headers"
+                :items="sviperUsers"
+                :search="search"
+              ></v-data-table>
+            </v-card>
+          </v-col>
+
+          <v-col
+            cols="6"
+            md="6"
+            xm="12"
+          >
+          <v-card>
+              <v-card-title>
+                Flappy Box
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
+              <v-data-table
+                :headers="headers"
+                :items="flappyUsers"
+                :search="search"
+              ></v-data-table>
+            </v-card>
+          </v-col>
+    
+        </v-row>
+
+    </v-content>
+  </v-app>
+</div>
 
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data: () => ({
+        search: '',
+        username: '',
+        age: '',
+        game:'sviper',
+        sviperUsers:[],
+        flappyUsers:[],
+        headers: [
+          {
+            text: 'User Name',
+            align: 'start',
+            sortable: false,
+            value: 'name',
+          },
+          { text: 'Score', value: 'score' },
+          { text: 'Age', value: 'age' },
+      ],
+  }),
+  created(){
+
+    this.getFlappyHighScores();
+    this.getSviperHighScores();
+   
+  },
+  mounted(){
+    if (localStorage.getItem('reloaded')) {
+        // The page was just reloaded. Clear the value from local storage
+        // so that it will reload the next time this page is visited.
+        localStorage.removeItem('reloaded');
+    } else {
+        // Set a flag so that we know not to reload the page twice.
+        localStorage.setItem('reloaded', '1');
+        location.reload();
+    }
+  },
+  methods: {
+    getFlappyHighScores(){
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', "/getUsers");
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.setRequestHeader('Accept', 'application/json,flappybox');
+
+    xhr.onload = () =>{
+      //this.handleResponse(xhr);
+      let message = xhr.response? JSON.parse(xhr.response)|| (xhr.response) : "";
+      console.log(message);
+      var newArrayDataOfOjbect = Object.values(message)
+      console.log(newArrayDataOfOjbect);
+      this.flappyUsers = newArrayDataOfOjbect;
+    }
+
+    xhr.send();
+    
+    //e.preventDefault();
+    return false;
+  },
+  getSviperHighScores(){
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', "/getUsers");
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+    xhr.setRequestHeader('Accept', 'application/json,sviper');
+
+    xhr.onload = () =>{
+      //this.handleResponse(xhr);
+      let message = xhr.response? JSON.parse(xhr.response)|| (xhr.response) : "";
+      console.log(message);
+      var newArrayDataOfOjbect = Object.values(message)
+      console.log(newArrayDataOfOjbect);
+      this.sviperUsers = newArrayDataOfOjbect;
+    }
+
+    xhr.send();
+    
+    //e.preventDefault();
+    return false;
+  }
+  }
+    })
+</script>
 </body>
 </html>

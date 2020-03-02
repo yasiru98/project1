@@ -31,6 +31,8 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
+
+
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   switch (request.method) {
@@ -40,8 +42,20 @@ const onRequest = (request, response) => {
       } else if (parsedUrl.pathname === '/style.css') {
         htmlHandler.getCSS(request, response);
       } else if (parsedUrl.pathname === '/getUsers') {
-        jsonHandler.getUsers(request, response);
-        //sviper game files
+        jsonHandler.getUsers(request,response)
+        //flappybox game files
+      }else if (parsedUrl.pathname === '/getFlappy') {
+          htmlHandler.getFlappy(request,response)
+      }else if (parsedUrl.pathname === '/flappyMain.js') {
+          htmlHandler.getFlappyMain(request,response)
+      }else if (parsedUrl.pathname === '/phaser.min.js') {
+          htmlHandler.getFlappyLibrary(request,response)
+          //flappybox game media
+      }else if (parsedUrl.pathname === '/bird.png') {
+          mediaHandler.getFlappyBox(request,response)
+      }else if (parsedUrl.pathname === '/pipe.png') {
+          mediaHandler.getFlappyPipe(request,response)
+        //sviper game files     
       } else if (parsedUrl.pathname === '/getSviper') {
         htmlHandler.getSviper(request, response);
       } else if (parsedUrl.pathname === '/main.js') {

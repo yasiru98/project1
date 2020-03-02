@@ -6,6 +6,23 @@ const sviperExplosion = fs.readFileSync(`${__dirname}/../sviper/images/explosion
 const sviperSpaceShip = fs.readFileSync(`${__dirname}/../sviper/images/SpaceShip.png`);
 const sviperEnemy = fs.readFileSync(`${__dirname}/../sviper/images/enemy.png`);
 
+const flappyBox = fs.readFileSync(`${__dirname}/../flappybox/assets/bird.png`);
+const flappyPipe = fs.readFileSync(`${__dirname}/../flappybox/assets/pipe.png`);
+
+const getFlappyPipe = (request, response) => {
+    response.writeHead(200, { 'Content-Type': 'image/png' });
+    response.write(flappyPipe);
+    response.end();
+};
+
+const getFlappyBox= (request, response) => {
+    response.writeHead(200, { 'Content-Type': 'image/png' });
+    response.write(flappyBox);
+    response.end();
+};
+
+
+
 const getSviperCursor = (request, response) => {
     response.writeHead(200, { 'Content-Type': 'image/png' });
     response.write(sviperCursor);
@@ -44,5 +61,7 @@ const getSviperEnemy = (request, response) => {
     getSviperCloud2,
     getSviperEnemy,
     getSviperSpaceship,
-    getSviperExplosion
+    getSviperExplosion,
+    getFlappyBox,
+    getFlappyPipe
   };

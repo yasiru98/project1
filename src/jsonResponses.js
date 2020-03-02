@@ -1,5 +1,6 @@
 // Note this object is purely in memory
-const users = {};
+const sviperUsers = {};
+const flappyUsers = {};
 
 const respondJSON = (request, response, status, object) => {
   const headers = {
@@ -22,36 +23,73 @@ const respondJSONMeta = (request, response, status) => {
 };
 
 const getUsers = (request, response) => {
-  const responseJSON = {
-    users,
-  };
+  let responseJSON ;
+  const game = request.headers.accept.split(',');
+  console.log(game[1]=="sviper");
+  if(game[1]=="sviper"){
+    responseJSON = sviperUsers;
+  }
+  else if(game[1]=="flappybox"){
+    responseJSON = flappyUsers;
+  }
+  else {
+    responseJSON = {
+    sviperUsers,
+    flappyUsers
+    }
+  }
 
   return respondJSON(request, response, 200, responseJSON);
 };
 
 const addUser = (request, response, body) => {
   const responseJSON = {
-    message: 'Name and age are both required',
+    message: 'Username and age are both required',
+    playMessage: 'Please play the game first',
+    ageMessage: 'Please enter or pick an appropriate age'
   };
 
   if (!body.name || !body.age || !body.score) {
     responseJSON.id = 'missingParams';
-    return respondJSON(request, response, 400, responseJSON);
+    return respondJSON(request, response, 400, responseJSON.message);
   }
-
+  else if (body.score == "null" || body.score == "0") {
+    responseJSON.id = 'missingScore';
+    return respondJSON(request, response, 400, responseJSON.playMessage);
+  }
+  else if (body.age == 0) {
+    responseJSON.id = 'missingScore';
+    return respondJSON(request, response, 400, responseJSON.ageMessage);
+  }
   let responseCode = 201; // created response code
-  if (users[body.name]) {
-    responseCode = 204; // updated response code
-  } else {
-    users[body.name] = {};
+  if(body.game == "sviper"){
+    
+    if (sviperUsers[body.name]) {
+      responseCode = 204; // updated response code
+    } else {
+      sviperUsers[body.name] = {};
+    }
+
+    //console.log(body.name);
+    //console.log(body.age);
+    //console.log(body.score);
+    sviperUsers[body.name].name = body.name;
+    sviperUsers[body.name].age = body.age;
+    sviperUsers[body.name].score = body.score;
+    //console.log(sviperUsers);
   }
-
-  users[body.name].name = body.name;
-  users[body.name].age = body.age;
-  users[body.name].score = body.score;
-
+  else if(body.game == "flappy"){
+    if (flappyUsers[body.name]) {
+      responseCode = 204; // updated response code
+    } else {
+      flappyUsers[body.name] = {};
+    }
+    flappyUsers[body.name].name = body.name;
+    flappyUsers[body.name].age = body.age;
+    flappyUsers[body.name].score = body.score;
+  }
   if (responseCode === 201) {
-    responseJSON.message = 'Created Successfully';
+    responseJSON.message = 'Score Submitted Successfully';
     return respondJSON(request, response, responseCode, responseJSON);
   }
 
