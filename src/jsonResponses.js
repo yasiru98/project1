@@ -48,7 +48,7 @@ const addUser = (request, response, body) => {
     message: 'Username and age are both required',
     playMessage: 'Please play the game first',
     ageMessage: 'Please enter or pick an appropriate age',
-    nameMessage:'Username should be at least 4 characters'
+    nameMessage:'Username should be at least 4 characters and less than 11 characters'
   };
 
   if (!body.name || !body.age || !body.score) {
@@ -63,7 +63,7 @@ const addUser = (request, response, body) => {
     responseJSON.id = 'missingAge';
     return respondJSON(request, response, 400, responseJSON.ageMessage);
   }
-  else if (body.name.length < 4) {
+  else if (body.name.length < 4 || body.name.length > 10) {
     responseJSON.id = 'missingName';
     return respondJSON(request, response, 400, responseJSON.nameMessage);
   }
