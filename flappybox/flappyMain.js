@@ -1,3 +1,4 @@
+//flappy bird clone code from: http://www.lessmilk.com/tutorial/flappy-bird-phaser-1 
 // Create our 'main' state that will contain the game
 let globalVariable={
     score: "0"
@@ -6,17 +7,18 @@ var mainState = {
     preload: function() { 
         // This function will be executed at the beginning     
         // That's where we load the images and sounds 
+        game.load.audio('jump', '/jump.wav'); 
         game.load.image('bird', '/bird.png'); 
         game.load.image('pipe', '/pipe.png');
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", 
         { font: "30px Arial", fill: "#ffffff" });  
-        this.instructions = game.add.text(20, 300, "Press Space to start", 
+        this.instructions = game.add.text(20, 300, "Left Click to start", 
         { font: "30px Arial", fill: "#ffffff" });  
     },
 
     create: function() { 
-  
+    this.jumpSound = game.add.audio('jump')
     this.timer = game.time.events.loop(1500, this.addRowOfPipes, this); 
        // Change the background color of the game to blue
     game.stage.backgroundColor = '#71c5cf';
@@ -35,29 +37,45 @@ var mainState = {
     this.bird.body.gravity.y = 1000;  
 
     // Call the 'jump' function when the spacekey is hit
-    var spaceKey = game.input.keyboard.addKey(
-                    Phaser.Keyboard.SPACEBAR);
-    spaceKey.onDown.add(this.jump, this);     
+    var spaceKey = game.input.activePointer.leftButton;
+   spaceKey.onDown.add(this.jump, this); 
+  
+     // Move the anchor to the left and downward
+    this.bird.anchor.setTo(-0.2, 0.5); 
     },
 
     update: function() {
-         // If the bird is out of the screen (too high or too low)
+    // If the bird is out of the screen (too high or too low)
     // Call the 'restartGame' function
+  
     if (this.bird.y < 0 || this.bird.y > 490)
     this.restartGame();
     game.physics.arcade.overlap(
         this.bird, this.pipes, this.restartGame, null, this);
-    },
-    // Make the bird jump 
-    jump: function() {
-    // Add a vertical velocity to the bird
-    this.bird.body.velocity.y = -350;
+
+    if (this.bird.angle < 20)
+        this.bird.angle += 1; 
     },
 
+    // Make the bird jump 
+    jump: function() {
+    if (this.bird.alive == false)
+    return;  
+    // Add a vertical velocity to the bird
+    this.bird.body.velocity.y = -350;
+    game.add.tween(this.bird).to({angle: -20}, 100).start();    
+
+    this.jumpSound.play(); 
+    },
+    
     // Restart the game
     restartGame: function() {
     // Start the 'main' state, which restarts the game
     game.state.start('main');
+
+    if (this.bird.angle < 20){
+    this.bird.angle += 1; 
+    }
     },
     addOnePipe: function(x, y) {
         // Create a pipe at the position x and y
@@ -105,6 +123,23 @@ var mainState = {
             if (i != hole && i != hole + 1) 
                 this.addOnePipe(400, i * 60 + 10);   
     },
+    hitPipe: function() {
+        // If the bird has already hit a pipe, do nothing
+        // It means the bird is already falling off the screen
+        if (this.bird.alive == false)
+            return;
+    
+        // Set the alive property of the bird to false
+        this.bird.alive = false;
+    
+        // Prevent new pipes from appearing
+        game.time.events.remove(this.timer);
+    
+        // Go through all the pipes, and stop their movement
+        this.pipes.forEach(function(p){
+            p.body.velocity.x = 0;
+        }, this);
+    }, 
 };
 
 // Initialize Phaser, and create a 400px by 490px game

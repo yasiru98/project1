@@ -1,224 +1,247 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html>
-    <head>  
-        <meta charset="utf-8" />
-        <title> Flappy Box </title>
+  <head>
+    <meta charset="utf-8" />
+    <title>Flappy Box</title>
 
-        <style>
-                canvas {
-                    padding-left: 0;
-                    padding-right: 0;
-                    margin-left: auto;
-                    margin-right: auto;
-                    display: block;
-                }
-        </style>
-        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-        <script type="text/javascript" src="/phaser.min.js"></script>
-        <script type="text/javascript" src="/flappyMain.js"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    </head>
-  
-    <body>
-            <div id="phaser-game">
-                
-            </div>
-            <div id="app">
-                    
-                    <v-app>
-                    <v-container>
-                        <v-row >
-                            <v-col
-                              cols="4"
-                              md="3"
-                            >
-                              <v-text-field
-                                v-model="username"
-                                label="User name"
-                                required
-                              ></v-text-field>
-                            </v-col>
-                    
-                            <v-col
-                              cols="4"
-                              md="3"
-                            >
-                              <v-text-field
-                                v-model="age"
-                                type="number" name="age" min="0" max="100" step="1"
-                                label="Age"
-                                required
-                              ></v-text-field>
-                            </v-col>
-                            <v-col cols="4"  sm="6">
-                                <v-slider
-                                  v-model="age"
-                                  class="mt-6"
-                                  color="orange"
-                                  label="Age"
-                                  hint="Be honest"
-                                  min="0"
-                                  max="100"
-                                  thumb-label
-                                ></v-slider>
-                              </v-col>
-                            <v-col
-                              cols="12"
-                              md="12"
-                              class="text-center"
-                            >
-                            <v-btn  @click="submit">submit high score</v-btn>
-                            </v-col>
-                          </v-row>
-                    </v-container>
-                    
-   
-                    <section>
-                    <p id="content" class="text-center"><b>STATUS</b></p>
-                    </section>
-                    
-                    
-                      <v-row >
-                          <v-col
-                            cols="12"
-                            md="12"
-                          >
-                          <v-card>
-                              <v-card-title>
-                                leader Board
-                                <v-spacer></v-spacer>
-                                <v-text-field
-                                  v-model="search"
-                                  append-icon="mdi-magnify"
-                                  label="Search"
-                                  single-line
-                                  hide-details
-                                ></v-text-field>
-                              </v-card-title>
-                              <v-data-table
-                                :headers="headers"
-                                :items="users"
-                                :search="search"
-                              ></v-data-table>
-                            </v-card>
-                          </v-col>
-                    
-                        </v-row>
-                    
-                    </v-app>
-                    </div>
-    <!-- vuetify JS files -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-<script>
-  new Vue({
-    el: '#app',
-    vuetify: new Vuetify(),
-
-    data: () => ({
-    search: '',
-    username: '',
-    age: '',
-    game:'sviper',
-    users:[],
-    headers: [
-        {
-          text: 'User Name',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        { text: 'Score', value: 'score' },
-        { text: 'Age', value: 'age' },
-      ],
-  }),
-  created(){
-    this.getHighScores();
-  },
-  methods: {
-    submit () {
-      //post high score to the server
-     console.log(this.username);
-      const nameAction = "/addUser";
-      const nameMethod = "post";
-      
-      const nameField = this.username;
-      const ageField = this.age;
-
-      const xhr = new XMLHttpRequest();
-      xhr.open(nameMethod, nameAction);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      xhr.setRequestHeader('Accept', 'application/json');
-
-      xhr.onload = () =>{
-        this.handleResponse(xhr);
-        this.getHighScores();
+    <style>
+      #app{
+        background-color: #E3F2FD;
       }
-      
-	    const formData  = `name=${this.username}&age=${this.age}&score=${globalVariable.score}&game=${"flappy"}`;
+      html{
+        background-color: #E3F2FD;
+      }
+      canvas {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+   <!--flappy bird clone code from: http://www.lessmilk.com/tutorial/flappy-bird-phaser-1 -->
+    <script type="text/javascript" src="/phaser.min.js"></script>
+    <script type="text/javascript" src="/flappyMain.js"></script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+  </head>
 
-      xhr.send(formData);
-    
-      //preventDefault();
-      return false;
-    },
-    clear () {
+  <body>
+    <div id="phaser-game"></div>
+    <div id="app">
+      <v-app>
 
-    },
-    handleResponse(xhr, parseResponse){
-      const content = document.querySelector('#content');
+        <v-container>
+          <v-row>
+            <v-col cols="4" md="3">
+              <v-text-field
+                v-model="username"
+                label="User name"
+                required
+              ></v-text-field>
+            </v-col>
 
-      let message = xhr.response? JSON.parse(xhr.response).message || (xhr.response) : "";
- 
-      
-      switch (xhr.status) {
-        case 200:
-          content.innerHTML = `<b>Success</b><p>Message: ${message}</p>`;
-          break;
-        case 201:
-          content.innerHTML = `<b>Submitted</b><p>Message: ${message}</p>`;
-          break;
-        case 204:
-          content.innerHTML = `<b>Updated (No Content)</b><p>Your data has been updated</p>`;
-        break;
-        case 404:
-          content.innerHTML = `<b>Resource Not Found</b><p>Message: ${message}</p>`;
-          break;
-        case 400:
-          content.innerHTML = `<b>Bad Request</b><p>Message: ${message}</p>`;
-          break;
-        default:
-          content.innerHTML = `<b>Error Code Not Implemented By Client</b><p>Status Code: ${xhr.status}</p>`;
-          break;
+            <v-col cols="4" md="3">
+              <v-text-field
+                v-model="age"
+                type="number"
+                name="age"
+                min="0"
+                max="100"
+                step="1"
+                label="Age"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4" sm="6">
+              <v-slider
+                v-model="age"
+                class="mt-6"
+                color="orange"
+                label="Age"
+                hint="Be honest"
+                min="0"
+                max="100"
+                thumb-label
+              ></v-slider>
+            </v-col>
+            <v-col cols="12" md="12" class="text-center">
+              <v-btn  raised @click="submit" color="black" class="ma-2 white--text">submit high score<v-icon right light>mdi-counter</v-icon></v-btn>
+              <v-btn  raised href="/"color="deep-purple accent-4"  class="ma-2 white--text">Play another game<v-icon right light>mdi-gamepad-variant </v-icon></v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+
+        <section>
+          <p id="content" class="text-center"><b>STATUS</b></p>
+        </section>
+
+        <v-row>
+          <v-col cols="12" md="12">
+            <v-card class="mx-6">
+              <v-card-title>
+                leader Board
+                <v-spacer></v-spacer>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
+              <v-data-table
+                :headers="headers"
+                :items="users"
+                :search="search"
+              ></v-data-table>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-app>
+    </div>
+    <!-- vuetify JS files -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+
+        data: () => ({
+          search: "",
+          username: "",
+          age: "",
+          game: "sviper",
+          users: [],
+          headers: [
+            {
+              text: "User Name",
+              align: "start",
+              sortable: false,
+              value: "name"
+            },
+            { text: "Score", value: "score" },
+            { text: "Age", value: "age" }
+          ]
+        }),
+        created() {//get high scores from server on load
+          this.getHighScores();
+        },
+        mounted() {//reload once on page load code from: https://stackoverflow.com/a/50214060
+          if (localStorage.getItem("reloaded")) {
+            // The page was just reloaded. Clear the value from local storage
+            // so that it will reload the next time this page is visited.
+            localStorage.removeItem("reloaded");
+          } else {
+            // Set a flag so that we know not to reload the page twice.
+            localStorage.setItem("reloaded", "1");
+            location.reload();
+          }
+        },
+        methods: {
+          submit() {
+            //post high score to the server
+            console.log(this.username);
+            const nameAction = "/addUser";
+            const nameMethod = "post";
+
+            const nameField = this.username;
+            const ageField = this.age;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open(nameMethod, nameAction);
+            xhr.setRequestHeader(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            xhr.setRequestHeader("Accept", "application/json");
+
+            xhr.onload = () => {
+              this.handleResponse(xhr);
+              this.getHighScores();
+            };
+            
+            this.username = this.username.trim();
+
+            const formData = `name=${this.username}&age=${this.age}&score=${globalVariable.score}&game=${"flappy"}`;
+
+            xhr.send(formData);
+
+            //preventDefault();
+            return false;
+          },
+          clear() {},
+          handleResponse(xhr, parseResponse) {//handle the status code response by the server
+            const content = document.querySelector("#content");
+
+            let message = xhr.response
+              ? JSON.parse(xhr.response).message || xhr.response
+              : "";
+
+            switch (xhr.status) {
+              case 200:
+                content.innerHTML = `<b>Success</b><p>Message: ${message}</p>`;
+                break;
+              case 201:
+                content.innerHTML = `<b>Submitted</b><p>Message: ${message}</p>`;
+                break;
+              case 204:
+                content.innerHTML = `<b>Updated (No Content)</b><p>Your data has been updated</p>`;
+                break;
+              case 404:
+                content.innerHTML = `<b>Resource Not Found</b><p>Message: ${message}</p>`;
+                break;
+              case 400:
+                content.innerHTML = `<b>Bad Request</b><p>Message: ${message}</p>`;
+                break;
+              default:
+                content.innerHTML = `<b>Error Code Not Implemented By Client</b><p>Status Code: ${xhr.status}</p>`;
+                break;
+            }
+          },
+          getHighScores() {//get high scores from server and add to array
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "/getUsers");
+            xhr.setRequestHeader(
+              "Content-Type",
+              "application/x-www-form-urlencoded"
+            );
+            xhr.setRequestHeader("Accept", "application/json,flappybox");
+
+            xhr.onload = () => {
+              //this.handleResponse(xhr);
+              let message = xhr.response
+                ? JSON.parse(xhr.response) || xhr.response
+                : "";
+              console.log(message);
+              let newArrayDataOfOjbect = Object.values(message);
+              console.log(newArrayDataOfOjbect);
+              this.users = newArrayDataOfOjbect;
+            };
+
+            xhr.send();
+
+            //e.preventDefault();
+            return false;
+          }
         }
-    },
-  getHighScores(){
-    
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', "/getUsers");
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.setRequestHeader('Accept', 'application/json,flappybox');
-
-    xhr.onload = () =>{
-      //this.handleResponse(xhr);
-      let message = xhr.response? JSON.parse(xhr.response)|| (xhr.response) : "";
-      console.log(message);
-      var newArrayDataOfOjbect = Object.values(message)
-      console.log(newArrayDataOfOjbect);
-      this.users = newArrayDataOfOjbect;
-    }
-
-    xhr.send();
-    
-    //e.preventDefault();
-    return false;
-  }
-  },
-  })
-</script>   
-
-    </body>  
-</html>  
+      });
+    </script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+//for loading required html,js and css files
 const fs = require('fs');
 
 const index = fs.readFileSync(`${__dirname}/../client/client.html`);
@@ -12,6 +13,14 @@ const sviperClasses = fs.readFileSync(`${__dirname}/../sviper/js/classes.js`);
 const flappy = fs.readFileSync(`${__dirname}/../flappybox/index.html`);
 const flappyMain = fs.readFileSync(`${__dirname}/../flappybox/flappyMain.js`);
 const flappyLibrary = fs.readFileSync(`${__dirname}/../flappybox/phaser.min.js`);
+
+const custom404 = fs.readFileSync(`${__dirname}/../client/404.html`);
+
+const get404 = (request, response) => {
+  response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.write(custom404);
+  response.end();
+};
 
 const getIndex = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -89,6 +98,7 @@ module.exports = {
   getSviperUtilities,
   getFlappy,
   getFlappyMain,
-  getFlappyLibrary
+  getFlappyLibrary,
+  get404
 
 };

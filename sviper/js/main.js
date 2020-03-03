@@ -67,23 +67,23 @@ function setup() {
   
 	// #6 - Load Sounds
   	shootSound = new Howl({
-        src: ['sounds/weapon_player.wav']
+        src: ['/weapon_player.wav']
     });
     
     hitSound = new Howl({
-        src: ['sounds/hit.flac']
+        src: ['/hit.flac']
     });
     
     fireballSound = new Howl({
-        src: ['sounds/explosion_asteroid.wav']
+        src: ['/explosion_asteroid.wav']
     });
 
     enemyShootSound = new Howl({
-        src: ['sounds/weapon_enemy.wav']
+        src: ['/weapon_enemy.wav']
     });
 
     powerUpSound = new Howl({
-        src: ['sounds/powerup.ogg']
+        src: ['/powerup.ogg']
     });
 	// #7 - Load sprite sheet
     explosionTextures = loadSpriteSheet();

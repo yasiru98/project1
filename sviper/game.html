@@ -15,6 +15,12 @@
   canvas {
    display: inline;
   }
+  #app{
+   background-color: #E3F2FD;
+      }
+  html{
+    background-color: #E3F2FD;
+      }
   </style>
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
@@ -75,25 +81,13 @@
           md="12"
           class="text-center"
         >
-        <v-btn  @click="submit">submit high score</v-btn>
+        <v-btn raised  @click="submit" color="black" class="ma-2 white--text">submit high score<v-icon right light>mdi-counter</v-icon></v-btn>
+        <v-btn raised href="/"color="deep-purple accent-4"  class="ma-2 white--text">Play another game<v-icon right light>mdi-gamepad-variant </v-icon></v-btn>
         </v-col>
       </v-row>
 </v-container>
 
-<!-- 
-<section id="top">
-		<form id="nameForm" action="/addUser" method="post">
-		  <label for="name">Name: </label>
-		  <input id="nameField" type="text" name="name" />
-		  <label for="age">Age: </label>
-		  <input id="ageField" type="number" name="age" min="0" max="100" step="1"/>
-		  <input type="submit" value="Submit High Score" />
-		</form>
-		<form id="userForm" action="/getUsers" method="get">
-		  <input type="submit" value="Get High Scores" />
-		</form>
-</section>
--->
+
 <section>
 <p id="content" class="text-center"><b>STATUS</b></p>
 </section>
@@ -104,7 +98,7 @@
         cols="12"
         md="12"
       >
-      <v-card>
+      <v-card class="mx-6">
           <v-card-title>
             leader Board
             <v-spacer></v-spacer>
@@ -159,7 +153,7 @@
         { text: 'Age', value: 'age' },
       ],
   }),
-  created(){
+  created(){//get high scores from server on load
     this.getHighScores();
   },
   methods: {
@@ -181,7 +175,8 @@
         this.handleResponse(xhr);
         this.getHighScores();
       }
-      
+      this.username = this.username.trim();
+
 	    const formData  = `name=${this.username}&age=${this.age}&score=${globalVariable.score}&game=${"sviper"}`;
 
       xhr.send(formData);
@@ -192,7 +187,7 @@
     clear () {
 
     },
-    handleResponse(xhr, parseResponse){
+    handleResponse(xhr, parseResponse){//handle the status code response by the server
       const content = document.querySelector('#content');
 
       let message = xhr.response? JSON.parse(xhr.response).message || (xhr.response) : "";
@@ -219,7 +214,7 @@
           break;
         }
     },
-  getHighScores(){
+  getHighScores(){//get high scores from server and add to array
     
     const xhr = new XMLHttpRequest();
     xhr.open('GET', "/getUsers");
@@ -230,7 +225,7 @@
       //this.handleResponse(xhr);
       let message = xhr.response? JSON.parse(xhr.response)|| (xhr.response) : "";
       console.log(message);
-      var newArrayDataOfOjbect = Object.values(message)
+      let newArrayDataOfOjbect = Object.values(message)
       console.log(newArrayDataOfOjbect);
       this.users = newArrayDataOfOjbect;
     }

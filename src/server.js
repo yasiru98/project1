@@ -43,6 +43,9 @@ const onRequest = (request, response) => {
         htmlHandler.getCSS(request, response);
       } else if (parsedUrl.pathname === '/getUsers') {
         jsonHandler.getUsers(request,response)
+        //404 page image
+      } else if (parsedUrl.pathname === '/spongegar.png') {
+        mediaHandler.getNotFoundSponge(request,response)
         //flappybox game files
       }else if (parsedUrl.pathname === '/getFlappy') {
           htmlHandler.getFlappy(request,response)
@@ -55,6 +58,8 @@ const onRequest = (request, response) => {
           mediaHandler.getFlappyBox(request,response)
       }else if (parsedUrl.pathname === '/pipe.png') {
           mediaHandler.getFlappyPipe(request,response)
+      }else if (parsedUrl.pathname === '/jump.wav') {
+          mediaHandler.getFlappyJump(request,response)
         //sviper game files     
       } else if (parsedUrl.pathname === '/getSviper') {
         htmlHandler.getSviper(request, response);
@@ -85,8 +90,25 @@ const onRequest = (request, response) => {
       else if (parsedUrl.pathname === '/enemy.png') {
         mediaHandler.getSviperEnemy(request, response);
       }
+      else if (parsedUrl.pathname === '/explosion_asteroid.wav') {
+        mediaHandler.getSviperAsteroid(request, response);
+      }
+      else if (parsedUrl.pathname === '/hit.flac') {
+        mediaHandler.getSviperHit(request, response);
+      }
+      else if (parsedUrl.pathname === '/powerup.ogg') {
+        mediaHandler.getSviperPower(request, response);
+      }
+      else if (parsedUrl.pathname === '/weapon_enemy.wav') {
+        mediaHandler.getSviperWeponEnemy(request, response);
+      }
+      else if (parsedUrl.pathname === '/weapon_player.wav') {
+        mediaHandler.getSviperWeponPlayer(request, response);
+      }
       else {
-        jsonHandler.notReal(request, response);
+        htmlHandler.get404(request,response);
+        //jsonHandler.notReal(request, response);
+
       }
       break;
     case 'HEAD':
@@ -100,7 +122,8 @@ const onRequest = (request, response) => {
       handlePost(request, response, parsedUrl);
       break;
     default:
-      jsonHandler.notReal(request, response);
+      //jsonHandler.notReal(request, response);
+      htmlHandler.get404(request,response);
       break;
   }
 };

@@ -1,3 +1,4 @@
+//for responding to API requests
 // Note this object is purely in memory
 const sviperUsers = {};
 const flappyUsers = {};
@@ -21,7 +22,7 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 
 };
-
+//check accept header parameters and send high score data
 const getUsers = (request, response) => {
   let responseJSON ;
   const game = request.headers.accept.split(',');
@@ -41,7 +42,7 @@ const getUsers = (request, response) => {
 
   return respondJSON(request, response, 200, responseJSON);
 };
-
+//check body parameters and add high score data from the user
 const addUser = (request, response, body) => {
   const responseJSON = {
     message: 'Username and age are both required',
@@ -57,7 +58,7 @@ const addUser = (request, response, body) => {
     responseJSON.id = 'missingScore';
     return respondJSON(request, response, 400, responseJSON.playMessage);
   }
-  else if (body.age === 0) {
+  else if (body.age === "0") {
     responseJSON.id = 'missingScore';
     return respondJSON(request, response, 400, responseJSON.ageMessage);
   }
@@ -70,13 +71,11 @@ const addUser = (request, response, body) => {
       sviperUsers[body.name] = {};
     }
 
-    //console.log(body.name);
-    //console.log(body.age);
-    //console.log(body.score);
+
     sviperUsers[body.name].name = body.name;
     sviperUsers[body.name].age = body.age;
     sviperUsers[body.name].score = body.score;
-    //console.log(sviperUsers);
+
   }
   else if(body.game === "flappy"){
     if (flappyUsers[body.name]) {

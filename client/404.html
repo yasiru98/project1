@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Our simple HTTP server</title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <style>
+    #app{
+        background-color: #2196F3;
+    }
+    </style>
+  </head>
+  <body>
+    <section id="content">
+      <div id="app">
+        <v-app>
+          <v-content>
+                <template>
+                        <div class="NotFound">
+                          <v-container>
+                            <v-layout row wrap>
+                              <v-flex xs12>
+                                <v-card height="400" color="transparent" flat>
+                                  <div class="display-3 mt-5">404 - Page not found.</div>
+                                  <div class="white--text  mt-5">
+                                    The page you are trying to get to never existed in this reality,
+                                    or has migrated to a parallel universe.
+                                  </div>
+                                  <br>
+                            
+                                  <v-btn  raised href="/"color="deep-purple accent-4"  class="ma-2 white--text"><v-icon left light>mdi-arrow-left </v-icon>Take me back</v-btn>
+    
+                                  <v-img class="mb-n12" src="/spongegar.png" ></v-img>
+                           
+                                </v-card>
+                              </v-flex>
+                            </v-layout>
+                          </v-container>
+                        </div>
+                    </template>
+          </v-content>
+        </v-app>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify(),
+        data: () => ({
+
+        }),
+
+      });
+    </script>
+  </body>
+</html>
