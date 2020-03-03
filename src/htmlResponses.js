@@ -17,7 +17,7 @@ const flappyLibrary = fs.readFileSync(`${__dirname}/../flappybox/phaser.min.js`)
 const custom404 = fs.readFileSync(`${__dirname}/../client/404.html`);
 
 const get404 = (request, response) => {
-  response.writeHead(200, { 'Content-Type': 'text/html' });
+  response.writeHead(404, { 'Content-Type': 'text/html' });
   response.write(custom404);
   response.end();
 };
