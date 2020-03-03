@@ -47,7 +47,8 @@ const addUser = (request, response, body) => {
   const responseJSON = {
     message: 'Username and age are both required',
     playMessage: 'Please play the game first',
-    ageMessage: 'Please enter or pick an appropriate age'
+    ageMessage: 'Please enter or pick an appropriate age',
+    nameMessage:'Username should be at least 4 characters'
   };
 
   if (!body.name || !body.age || !body.score) {
@@ -59,8 +60,12 @@ const addUser = (request, response, body) => {
     return respondJSON(request, response, 400, responseJSON.playMessage);
   }
   else if (body.age === "0") {
-    responseJSON.id = 'missingScore';
+    responseJSON.id = 'missingAge';
     return respondJSON(request, response, 400, responseJSON.ageMessage);
+  }
+  else if (body.name.length < 4) {
+    responseJSON.id = 'missingName';
+    return respondJSON(request, response, 400, responseJSON.nameMessage);
   }
   let responseCode = 201; // created response code
   if(body.game === "sviper"){
